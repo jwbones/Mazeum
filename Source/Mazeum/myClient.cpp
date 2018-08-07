@@ -18,9 +18,13 @@ bool AmyClient::ServerSetup_Validate() {
 player
 */
 void AmyClient::ServerSetup_Implementation() {
+	UE_LOG(LogTemp, Warning, TEXT("serverSetup called"));
 	int32 userId;
 	UserverSave* serverSave = Cast<UserverSave>(UGameplayStatics::CreateSaveGameObject(UserverSave::StaticClass()));
-	serverSave = Cast<UserverSave>(UGameplayStatics::LoadGameFromSlot(serverSave->SaveSlotName, serverSave->UserIndex));
+	if (UGameplayStatics::DoesSaveGameExist(serverSave->SaveSlotName, serverSave->UserIndex)) {
+		//save exists, load existing save
+		serverSave = Cast<UserverSave>(UGameplayStatics::LoadGameFromSlot(serverSave->SaveSlotName, serverSave->UserIndex));
+	}
 	userId = serverSave->playerCount;
 	serverSave->playerCount++; //increment playerCount AFTER using it
 	
@@ -42,6 +46,7 @@ void AmyClient::ServerSetup_Implementation() {
 }
 
 bool AmyClient::ServerLogin_Validate(int32 userId, const FString& userKey) {
+	UE_LOG(LogTemp, Warning, TEXT("serverLogin called"));
 	//load the server saves
 	UserverSave* serverSave = Cast<UserverSave>(UGameplayStatics::CreateSaveGameObject(UserverSave::StaticClass()));
 	serverSave = Cast<UserverSave>(UGameplayStatics::LoadGameFromSlot(serverSave->SaveSlotName, serverSave->UserIndex));
@@ -61,28 +66,36 @@ bool AmyClient::ServerLogin_Validate(int32 userId, const FString& userKey) {
 	}
 
 	//all good
+	UE_LOG(LogTemp, Warning, TEXT("serverLogin passed auth"));
 	return true;
 }
 
 
-void AmyClient::ServerLogin_Implementation(int32 userId, const FString& userKey) {
-	//login time
-	ClientLogin();
 
+void AmyClient::ServerLogin_Implementation(int32 userId, const FString& userKey) {
+	UE_LOG(LogTemp, Warning, TEXT("serverLogin implementation called"));
+	//login time
+	AgameModeWithServer* gameModeRef = (AgameModeWithServer*)GetWorld()->GetAuthGameMode();
+	AserverThing* serverRef = gameModeRef->getServer();
+	serverRef->addPlayer(userId);
+	ClientLogin();
 }
 
 void AmyClient::ClientLogin_Implementation() {
+	UE_LOG(LogTemp, Warning, TEXT("clientLogin called"));
 	APlayerController * player = GetWorld()->GetFirstPlayerController();
 	FString serverIp;
 	GConfig->GetString(TEXT("/Script/OnlineSubsystemUtils.OnlineBeaconHost"), TEXT("ServerIp"), serverIp, GEngineIni);
 	FString port;
 	GConfig->GetString(TEXT("/Script/OnlineSubsystemUtils.OnlineBeaconHost"), TEXT("ServerPort"), port, GEngineIni);
+	serverIp += ":";
 	serverIp += port;
 	player->ClientTravel(serverIp, TRAVEL_Absolute);
 }
 
 
 bool AmyClient::connectToServer() {
+	UE_LOG(LogTemp, Warning, TEXT("trying to connect"));
 	//connect to the server
 	FString serverIp;
 	GConfig->GetString(TEXT("/Script/OnlineSubsystemUtils.OnlineBeaconHost"), TEXT("ServerIp"), serverIp, GEngineIni);
@@ -96,7 +109,7 @@ bool AmyClient::connectToServer() {
 }
 
 void AmyClient::ClientStart_Implementation() {
-
+	UE_LOG(LogTemp, Warning, TEXT("trying to start"));
 	//check if the client has a save
 	if (!UGameplayStatics::DoesSaveGameExist("user", 0)) {
 		//no save, make one
@@ -107,15 +120,18 @@ void AmyClient::ClientStart_Implementation() {
 		UE_LOG(LogTemp, Warning, TEXT("Failed first setup"));
 		return;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("created save"));
 
 	UclientSave* clientSave = Cast<UclientSave>(UGameplayStatics::CreateSaveGameObject(UclientSave::StaticClass()));
 	clientSave = Cast<UclientSave>(UGameplayStatics::LoadGameFromSlot(clientSave->SaveSlotName, clientSave->UserIndex));
+	UE_LOG(LogTemp, Warning, TEXT("trying to connect to server"));
 	ServerLogin(clientSave->userId, clientSave->userKey);
 
 
 }
 
 void AmyClient::ClientSetup_Implementation(int32 userId, const FString& userKey) {
+	UE_LOG(LogTemp, Warning, TEXT("clientSetup called"));
 	UclientSave* localSave = Cast<UclientSave>(UGameplayStatics::CreateSaveGameObject(UclientSave::StaticClass()));
 	localSave->userId = userId;
 	localSave->userKey = userKey;

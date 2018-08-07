@@ -8,6 +8,7 @@ UserverSave::UserverSave()
 	SaveSlotName = TEXT("server");
 	UserIndex = 0;
 	playerCount = 0;
+	playerSaves = TArray<FplayerInfo>();
 }
 
 

@@ -16,10 +16,10 @@ class MAZEUM_API UclientSave : public USaveGame
 
 	public:
 
-		UPROPERTY(VisibleAnywhere, Category = Basic, BlueprintReadWrite)
+		UPROPERTY(VisibleAnywhere, Category = Basic, BlueprintReadOnly)
 		int32 userId;
 
-		UPROPERTY(VisibleAnywhere, Category = Basic)
+		UPROPERTY(VisibleAnywhere, Category = Basic, BlueprintReadOnly)
 		FString userKey;
 
 		UPROPERTY(VisibleAnywhere, Category = Basic, BlueprintReadWrite)

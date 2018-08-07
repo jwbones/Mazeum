@@ -2,6 +2,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "playerInfo.generated.h"
+
+
 USTRUCT(BlueprintType)
 struct FplayerInfo
 {
@@ -23,7 +25,8 @@ struct FplayerInfo
 	FplayerInfo(int32 idToUse, FString keyToUse) {
 		id = idToUse;
 		key = keyToUse;
-		//TODO set savedLocation to the spawn location
+		savedLocation = FTransform(FVector(-200.0, 100.0, 500.0));
+		//TODO set savedLocation to the spawn location NOT LIKE AN APE
 	}
 
 };

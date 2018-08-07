@@ -3,5 +3,7 @@
 #include "gameModeWithServer.h"
 
 
-
+AserverThing* AgameModeWithServer::getServer() {
+	return server;
+}
 

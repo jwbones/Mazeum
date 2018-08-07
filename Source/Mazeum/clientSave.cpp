@@ -7,5 +7,7 @@ UclientSave::UclientSave()
 {
 	SaveSlotName = TEXT("user");
 	UserIndex = 0;
+	userId = -1;
+	userKey = TEXT("bad");
 }
 

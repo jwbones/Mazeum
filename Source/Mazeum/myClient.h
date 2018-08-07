@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "OnlineBeaconClient.h"
+#include "gameModeWithServer.h"
 #include "myClient.generated.h"
 
 #define SERVER_IP "108.216.158.79"
