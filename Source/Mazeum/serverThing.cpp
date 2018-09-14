@@ -133,3 +133,54 @@ bool AserverThing::authenticatePair(int32 userId, const FString& keyToCheck) {
 	UE_LOG(LogTemp, Warning, TEXT("not found"));
 	return false;
 }
+
+int32 AserverThing::getPower(int32 userId, int32 power) {
+	if (!HasAuthority()) {
+		return 0;
+	}
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		if (connectedPlayers[i].save.id == userId) {
+			return connectedPlayers[i].save.powers[power];
+		}
+	}
+	return 0;
+}
+
+int32 AserverThing::addPower(int32 userId, int32 power) {
+	if (!HasAuthority()) {
+		UE_LOG(LogTemp, Warning, TEXT("no authority"));
+		return -2;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("foo"));
+	UE_LOG(LogTemp, Warning, TEXT("connectedPlayers.Num() = %d"), connectedPlayers.Num());
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		UE_LOG(LogTemp, Warning, TEXT("looping, i = %d, connectedPlayers[i].save.id = %d, id to search = %d"), i, connectedPlayers[i].save.id, userId);
+		if (connectedPlayers[i].save.id == userId && connectedPlayers[i].save.powers[power] == 0) {
+			connectedPlayers[i].save.powers[power] = 1;
+			return 0;
+		}
+		if (connectedPlayers[i].save.id == userId) {
+			UE_LOG(LogTemp, Warning, TEXT("power int = %d"), connectedPlayers[i].save.powers[power]);
+			return 2;
+		}
+	}
+	return -5;
+}
+
+int32 AserverThing::dummyPlayer() {
+	UserverSave* serverSave = Cast<UserverSave>(UGameplayStatics::CreateSaveGameObject(UserverSave::StaticClass()));
+	if (UGameplayStatics::DoesSaveGameExist(serverSave->SaveSlotName, serverSave->UserIndex)) {
+		//save exists, load existing save
+		serverSave = Cast<UserverSave>(UGameplayStatics::LoadGameFromSlot(serverSave->SaveSlotName, serverSave->UserIndex));
+	}
+	int32 userId = serverSave->playerCount;
+	serverSave->playerCount++; //increment playerCount AFTER using it
+
+	FplayerInfo newPlayer = FplayerInfo(userId, "dummy");
+	serverSave->playerSaves.Add(newPlayer);
+	UGameplayStatics::SaveGameToSlot(serverSave, serverSave->SaveSlotName, serverSave->UserIndex);
+
+	addPlayer(userId);
+
+	return userId;
+}

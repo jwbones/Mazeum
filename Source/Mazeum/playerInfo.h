@@ -15,8 +15,13 @@ struct FplayerInfo
 		UPROPERTY()
 		FString key;
 
+
 	UPROPERTY(VisibleAnywhere)
 		FTransform savedLocation;
+
+	UPROPERTY(VisibleAnywhere)
+		int32 powers[8] = { 0 };
+
 
 	FplayerInfo() {
 		//TODO set savedLocation to the spawn location

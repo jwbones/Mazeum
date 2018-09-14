@@ -37,10 +37,20 @@ public:
 	virtual FTransform getTransformById(int32 userId);
 
 	UFUNCTION(BlueprintCallable)
+	virtual int32 getPower(int32 userId, int32 power);
+	
+	UFUNCTION(BlueprintCallable)
+	virtual int32 addPower(int32 userId, int32 power);
+
+	UFUNCTION(BlueprintCallable)
 	virtual void bindPawn(int32 userId, ACharacter* pawn);
 
 	UFUNCTION(BlueprintCallable)
 	virtual bool authenticatePair(int32 userId, const FString& keyToCheck);
+
+	//dev only
+	UFUNCTION(BlueprintCallable)
+	virtual int32 dummyPlayer();
 
 
 
