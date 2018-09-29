@@ -48,6 +48,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool authenticatePair(int32 userId, const FString& keyToCheck);
 
+	UFUNCTION(BlueprintCallable)
+	virtual bool checkPower(int32 userId, int32 power);
+
+
 	//dev only
 	UFUNCTION(BlueprintCallable)
 	virtual int32 dummyPlayer();

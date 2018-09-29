@@ -17,7 +17,7 @@ AserverThing::AserverThing()
 
 }
 
-
+//adds a player to the list of connected players, to be called when a player connects
 void AserverThing::addPlayer(int32 userId) {
 	if (!HasAuthority()) {
 		return;
@@ -87,7 +87,7 @@ void AserverThing::savePlayers() {
 }
 
 
-
+//gets the transform of a connected player's pawn by their id
 FTransform AserverThing::getTransformById(int32 userId) {
 	if (!HasAuthority()) {
 		return FTransform();
@@ -100,6 +100,7 @@ FTransform AserverThing::getTransformById(int32 userId) {
 	return FTransform();
 }
 
+//connects the pawn given to a dynPlayerInfo in connectedPlayers, to be used when a player connects to the server
 void AserverThing::bindPawn(int32 userId, ACharacter* pawn) {
 	if (!HasAuthority()) {
 		return;
@@ -112,7 +113,7 @@ void AserverThing::bindPawn(int32 userId, ACharacter* pawn) {
 	UE_LOG(LogTemp, Warning, TEXT("player bound, userId = %d"), userId);
 }
 
-
+//authenticates a player given their id and key
 bool AserverThing::authenticatePair(int32 userId, const FString& keyToCheck) {
 	UE_LOG(LogTemp, Warning, TEXT("authenticatePair called"));
 	if (!HasAuthority()) {
@@ -134,6 +135,7 @@ bool AserverThing::authenticatePair(int32 userId, const FString& keyToCheck) {
 	return false;
 }
 
+//returns the value in that players power slot
 int32 AserverThing::getPower(int32 userId, int32 power) {
 	if (!HasAuthority()) {
 		return 0;
@@ -146,6 +148,20 @@ int32 AserverThing::getPower(int32 userId, int32 power) {
 	return 0;
 }
 
+//checks whether the player has the power
+bool AserverThing::checkPower(int32 userId, int32 power) {
+	if (!HasAuthority()) {
+		return 0;
+	}
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		if (connectedPlayers[i].save.id == userId) {
+			return connectedPlayers[i].save.powers[power] > 0;
+		}
+	}
+	return 0;
+}
+
+//gives the specified player the specified power
 int32 AserverThing::addPower(int32 userId, int32 power) {
 	if (!HasAuthority()) {
 		UE_LOG(LogTemp, Warning, TEXT("no authority"));
@@ -167,6 +183,7 @@ int32 AserverThing::addPower(int32 userId, int32 power) {
 	return -5;
 }
 
+//do not use
 int32 AserverThing::dummyPlayer() {
 	UserverSave* serverSave = Cast<UserverSave>(UGameplayStatics::CreateSaveGameObject(UserverSave::StaticClass()));
 	if (UGameplayStatics::DoesSaveGameExist(serverSave->SaveSlotName, serverSave->UserIndex)) {
