@@ -7,6 +7,7 @@
 #include "serverThing.h"
 #include "gameModeWithServer.generated.h"
 
+#define HOME_POINT_TESTPLANE (100.0, 100.0, 300.0)
 
 /**
  * 
@@ -23,4 +24,7 @@ protected:
 public:
 	UFUNCTION()
 	AserverThing* getServer();
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	FVector homePoint = FVector(HOME_POINT_TESTPLANE);
 };

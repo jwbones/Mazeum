@@ -22,6 +22,9 @@ struct FplayerInfo
 	UPROPERTY(VisibleAnywhere)
 		int32 powers[8] = { 0 };
 
+	UPROPERTY(VisibleAnywhere)
+		FVector returnPoint = FVector((100.0, 100.0, 300.0));
+
 
 	FplayerInfo() {
 		//TODO set savedLocation to the spawn location
@@ -30,7 +33,7 @@ struct FplayerInfo
 	FplayerInfo(int32 idToUse, FString keyToUse) {
 		id = idToUse;
 		key = keyToUse;
-		savedLocation = FTransform(FVector(-200.0, 100.0, 500.0));
+		savedLocation = FTransform(FVector((100.0, 100.0, 300.0)));
 		//TODO set savedLocation to the spawn location NOT LIKE AN APE
 	}
 

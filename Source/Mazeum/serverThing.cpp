@@ -201,3 +201,49 @@ int32 AserverThing::dummyPlayer() {
 
 	return userId;
 }
+
+//gets the saved return point for that userId
+FVector AserverThing::getReturnPoint(int32 userId) {
+	if (!HasAuthority()) {
+		return { 0,0,3000 };
+	}
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		if (connectedPlayers[i].save.id == userId) {
+			return connectedPlayers[i].save.returnPoint;
+		}
+	}
+	return { 0,0,3000 };
+}
+
+//sets the return point for that userId
+void AserverThing::setReturnPoint(int32 userId, FVector returnPoint) {
+	if (!HasAuthority()) {
+		return;
+	}
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		if (connectedPlayers[i].save.id == userId) {
+			connectedPlayers[i].save.returnPoint = returnPoint;
+		}
+	}
+}
+
+//returns the location of a random player on the server
+FVector AserverThing::getBuddy(int32 userId) {
+	if (!HasAuthority()) {
+		return { 0,0,0 };
+	}
+	int playerPos = 0;
+	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
+		if (connectedPlayers[i].save.id == userId) {
+			int playerPos = i;
+		}
+	}
+	if (connectedPlayers.Num() == 1) { //no other players
+		return connectedPlayers[playerPos].playerPawn->GetActorLocation();
+	}
+	int buddyPos = FMath::FRandRange(0, connectedPlayers.Num());
+	while (buddyPos == playerPos) {
+		buddyPos = FMath::FRandRange(0, connectedPlayers.Num());
+	}
+	return connectedPlayers[buddyPos].playerPawn->GetActorLocation();
+}

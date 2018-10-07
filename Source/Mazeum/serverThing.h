@@ -51,6 +51,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool checkPower(int32 userId, int32 power);
 
+	UFUNCTION(BlueprintCallable)
+	virtual FVector getReturnPoint(int32 userId);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void setReturnPoint(int32 userId, FVector returnPoint);
+
+	UFUNCTION(BlueprintCallable)
+	virtual FVector getBuddy(int32 userId);
 
 	//dev only
 	UFUNCTION(BlueprintCallable)
