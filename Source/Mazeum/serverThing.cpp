@@ -204,11 +204,13 @@ int32 AserverThing::dummyPlayer() {
 
 //gets the saved return point for that userId
 FVector AserverThing::getReturnPoint(int32 userId) {
+	UE_LOG(LogTemp, Warning, TEXT("trying to get return point"));
 	if (!HasAuthority()) {
 		return { 0,0,3000 };
 	}
 	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
 		if (connectedPlayers[i].save.id == userId) {
+			UE_LOG(LogTemp, Warning, TEXT("got return point"));
 			return connectedPlayers[i].save.returnPoint;
 		}
 	}
@@ -217,12 +219,14 @@ FVector AserverThing::getReturnPoint(int32 userId) {
 
 //sets the return point for that userId
 void AserverThing::setReturnPoint(int32 userId, FVector returnPoint) {
+	UE_LOG(LogTemp, Warning, TEXT("trying to set return point, id = %d"), userId);
 	if (!HasAuthority()) {
 		return;
 	}
 	for (int32 i = 0; i < connectedPlayers.Num(); i++) {
 		if (connectedPlayers[i].save.id == userId) {
 			connectedPlayers[i].save.returnPoint = returnPoint;
+			UE_LOG(LogTemp, Warning, TEXT("set return point"));
 		}
 	}
 }
